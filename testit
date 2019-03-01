@@ -1,0 +1,10 @@
+#!/bin/csh
+#translation tests
+# only data between 5 and 30 degree elevation angles
+RinexSNRv2.e p0410010.18o p0410010.snr99 auto0010.18n 99
+# all data
+RinexSNRv2.e p0410010.18o p0410010.snr88 auto0010.18n 88
+# only L2C satellites
+RinexSNRv2.e pie10010.18o pie10010.snr77 auto0010.18n 77
+# more than 10 observables
+RinexSNRv2.e smm30010.18o smm30010.snr99 auto0010.18n 99
