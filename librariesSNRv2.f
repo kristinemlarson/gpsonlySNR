@@ -270,7 +270,7 @@ c
       subroutine read_broadcast4(filename, bele,iymd)
       implicit none
       include 'local.inc'
-      character*60 filename, temp
+      character*80 filename, temp
       real*8 bele (maxeph,maxsat,28), rt1, rt2, rt3, rt4
       integer i, j, k, k1, isat, iymd(3),year4ch,
      .  iprn, file(maxsat), it1, it2, it3, it4, it5, iversion, ios
@@ -400,7 +400,7 @@ c     if you use moving site coordinates, make sure they are consistent
 c     18feb22 added L5
       include 'local.inc'
       integer  i, fileID
-      character*60 rawf
+      character*80 rawf
       character*80 line, dynfmt
       logical  endofheader 
       integer nobs,iobs(maxsat), iymd(3)
