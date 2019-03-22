@@ -4,7 +4,7 @@
       integer stderr
       parameter (stderr=6)
       character*80 inline
-      character*60 rawfilename, outfilename, broadfile
+      character*80 rawfilename, outfilename, broadfile
       character*4 station
       character*2  prn_pickc
       character*1 satID(maxsat)
