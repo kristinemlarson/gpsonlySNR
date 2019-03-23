@@ -9,7 +9,8 @@
       character*80 tmp, filename
 c     default outputs to zero and false
 c     a priori coordinates and velocity file
-      filename = '/gipsy/source/RinexSNRv2gitHub/knut.txt'
+      call getlogical ('COORDS', filename)
+c      filename = '/gipsy/source/RinexSNRv2gitHub/knut.txt'
       print*, year, month, day
       eof = .false.
       fsite = .false.
