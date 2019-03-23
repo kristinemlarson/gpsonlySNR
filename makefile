@@ -1,6 +1,6 @@
 # I have made changes here that were recommended by my son
 LDARGS =
-OBJFILES = RinexSNRv2.o librariesSNRv2.o moving_sites.o get_azel.o read_header_20obs.o read_block_gps.o write_to_file.o
+OBJFILES = RinexSNRv2.o librariesSNRv2.o moving_sites.o get_azel.o read_header_20obs.o read_block_gps.o write_to_file.o unixlib.o
 
 
 %.o: %.f
