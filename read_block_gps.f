@@ -1,3 +1,40 @@
+      subroutine read_block_gps_flag(fileID, itime, debugging,
+     .  current_hour, sec, msec, flag, numsat)
+      implicit none
+      include 'local.inc'
+      integer i,fileID,ios,sec,msec,numsat,itime(5),flag,current_hour
+      character*80 inline
+      real*8 tod, tod_save
+      logical bad_point,debugging
+
+      inline = ' '
+      read(fileID,'(A80)', iostat=ios) inline
+      if (ios.ne.0)then 
+        return 99
+      endif
+      read(inline(1:32),'(5I3,X,I2,X,I3,4X,2I3)')
+     +     (itime(i), i=1,5), sec, msec, flag, numsat
+      if (itime(4) .ne.current_hour) then
+        current_hour = itime(4)
+      endif
+c     seconds in the day
+      tod = itime(4)*3600.0 + 60.0*itime(5) + sec
+      if (tod.lt.tod_save) then
+        print*,'Time is going backwards or standing still'
+        print*,'Ignoring this record'
+        bad_point = .true.
+        tod_save = tod
+      else
+        bad_point = .false.
+        tod_save = tod
+      endif
+      if (debugging) then
+        print*, 'reading block ' 
+        print*, inline(1:60)
+      endif
+      return
+      end subroutine read_block_gps_flag
+
       subroutine read_block_gps(fileID, flag,inline,numsat,nobs,satID,
      .  prn,obs,lli)
 c     19mar01 KL
