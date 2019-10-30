@@ -116,31 +116,15 @@ c     open output file
       print*, 'S5 location:', iobs(8)
 c     start reading the observation records
       do while (.not.eof) 
-        inline = ' '
+c      inline = ' '
         read(fileIN,'(A80)', iostat=ios) inline
-        if (ios.ne.0) goto 99 
-        read(inline(1:32),'(5I3,X,I2,X,I3,4X,2I3)')
-     +     (itime(i), i=1,5), sec, msec, flag, numsat
-        if (itime(4) .ne.current_hour) then
-          current_hour = itime(4)
+        if (ios.ne.0)then 
+          goto 99
         endif
-c       seconds in the day
-        tod = itime(4)*3600.0 + 60.0*itime(5) + sec
-        if (tod.lt.tod_save) then
-          print*,'Time is going backwards or standing still'
-          print*,'Ignoring this record'
-          bad_point = .true.
-          tod_save = tod
-        else
-          bad_point = .false.
-          tod_save = tod
-        endif
-        if (debugging) then
-          print*, 'reading block ' 
-          print*, inline(1:60)
-        endif
+        call read_block_gps_flag(ios,fileIN,inline,itime,debugging,
+     .    current_hour,sec,msec,flag,numsat)
 c      19mar01 - expanding number of observables allowed
-        call read_block_gps(fileIN, flag,inline,numsat,nobs,satID, 
+        call read_block_gps(fileIN,flag,inline,numsat,nobs,satID, 
      .    prn,obs,lli)
 c       if flag has value 4, that means there were comment
 c       lines, and those were skipped
