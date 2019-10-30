@@ -114,12 +114,17 @@ c     open output file
       print*, 'S1 location:', iobs(6)
       print*, 'S2 location:', iobs(7)
       print*, 'S5 location:', iobs(8)
-      call read_block_gps_flag(fileIN,itime,debugging,current_hour,
-     .  sec,msec,flag,numsat)
 c     start reading the observation records
       do while (.not.eof) 
+c      inline = ' '
+        read(fileIN,'(A80)', iostat=ios) inline
+        if (ios.ne.0)then 
+          goto 99
+        endif
+        call read_block_gps_flag(ios,fileIN,inline,itime,debugging,
+     .    current_hour,sec,msec,flag,numsat)
 c      19mar01 - expanding number of observables allowed
-        call read_block_gps(fileIN, flag,inline,numsat,nobs,satID, 
+        call read_block_gps(fileIN,flag,inline,numsat,nobs,satID, 
      .    prn,obs,lli)
 c       if flag has value 4, that means there were comment
 c       lines, and those were skipped

@@ -85,15 +85,15 @@ c           read the third line
       enddo
       do i = 1, nobs
           if (key(i).eq.'l1c' .or. key(i).eq.'L1C') iobs(1) = i
-          if (key(i).eq.'l2p' .or. key(i).eq.'L2P') iobs(2) = i
+          if (key(i).eq.'l2x' .or. key(i).eq.'L2X') iobs(2) = i
           if (key(i).eq.'c1c' .or. key(i).eq.'C1C') iobs(3) = i
-          if (key(i).eq.'c1p' .or. key(i).eq.'C1P') iobs(4) = i
-          if (key(i).eq.'c2p' .or. key(i).eq.'C2P') iobs(5) = i
+          if (key(i).eq.'c1w' .or. key(i).eq.'C1W') iobs(4) = i
+          if (key(i).eq.'c2x' .or. key(i).eq.'C2X') iobs(5) = i
           if (key(i).eq.'s1c' .or. key(i).eq.'S1C') iobs(6) = i
-          if (key(i).eq.'s2p' .or. key(i).eq.'S2P') iobs(7) = i
-          if (key(i).eq.'s5i' .or. key(i).eq.'S5I') iobs(8) = i
-!          if (key(i).eq.'s6' .or. key(i).eq.'S6') iobs(9) = i
-!          if (key(i).eq.'s7' .or. key(i).eq.'S7') iobs(10) = i
-!          if (key(i).eq.'s8' .or. key(i).eq.'S8') iobs(11) = i
+          if (key(i).eq.'s2x' .or. key(i).eq.'S2X') iobs(7) = i
+          if (key(i).eq.'s5x' .or. key(i).eq.'S5X') iobs(8) = i
+!          if (key(i).eq.'s1x' .or. key(i).eq.'S1X') iobs(9) = i
+!          if (key(i).eq.'s2x' .or. key(i).eq.'S2X') iobs(10) = i
+!          if (key(i).eq.'s2w' .or. key(i).eq.'S2W') iobs(11) = i
       enddo
       end

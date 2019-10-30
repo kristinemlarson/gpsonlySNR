@@ -1,17 +1,13 @@
-      subroutine read_block_gps_flag(fileID, itime, debugging,
+      subroutine read_block_gps_flag(ios,fileID,inline,itime, debugging,
      .  current_hour, sec, msec, flag, numsat)
       implicit none
       include 'local.inc'
-      integer i,fileID,ios,sec,msec,numsat,itime(5),flag,current_hour
+      integer i,fileID,ios,sec,msec,numsat,itime(5),flag,
+     .  current_hour
       character*80 inline
       real*8 tod, tod_save
       logical bad_point,debugging
 
-      inline = ' '
-      read(fileID,'(A80)', iostat=ios) inline
-      if (ios.ne.0)then 
-        return 99
-      endif
       read(inline(1:32),'(5I3,X,I2,X,I3,4X,2I3)')
      +     (itime(i), i=1,5), sec, msec, flag, numsat
       if (itime(4) .ne.current_hour) then
