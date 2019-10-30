@@ -28,43 +28,34 @@ c     returned to main code
       do while (.not.endofheader)
 c     KL 18mar05, fixed bug on nobs
         read (fileID,'(a80)') line
+        dynfmt='(6X,13(1X,A3))'
         if (line(1:1)=='G'.and.line(61:80).eq.'SYS / # / OBS TYPES')then
 !     GPS only
           read(line(4:6), fmt='(I6)') nobs
 c   KL 19jan09 allowing more lines of OBS types
 c         first line has up to 9 OBS types
           if (nobs .lt. 14) then
-            write(dynfmt, fmt='(A, 2X, I3.3)')
-     +                      "(6X,", nobs, "(1X,A3))"
             read(line, fmt=dynfmt) (key(i), i=1,nobs)
 c         between 14-26 OBS types
           elseif (nobs.ge.14.and.nobs.le.26) then
-            write(dynfmt, fmt='(A, 2X, I3.3)')
-     +                      "(6X,", 13, "(1X,A3))"
             read(line, fmt=dynfmt) (key(i), i=1,13)
 c           read the next line
             read (fileID,'(a80)') line
-            write(dynfmt, fmt='(A, 2X, I3.3)')
-     +                      "(6X,", nobs-13, "(1X,A3))"
-            read(line, fmt=dynfmt) (key(i), i=13,nobs)
+            write(dynfmt(5:6), fmt='(i2)') nobs-13
+            read(line, fmt=dynfmt) (key(i), i=14,nobs)
 c           this is more than 26 OBS types
           else
 c           first line
-            write(dynfmt, fmt='(A, 2X, I3.3)')
-     +                      "(6X,", 13, "(1X,A3))"
             read(line, fmt=dynfmt) (key(i), i=1,13)
 
 c           read the next line
             read (fileID,'(a80)') line
 c           reassign this second line
-            write(dynfmt, fmt='(A, 1X, I3.3)')
-     +                      "(6X,", 13, "(1X,A3))"
             read(line, fmt=dynfmt) (key(i), i=14,26)
 
 c           read the third line
             read (fileID,'(a80)') line
-            write(dynfmt, fmt='(A, 1X, I3.3)')
-     +                      "(6X,", nobs-26, "(1X,A3))"
+            write(dynfmt(5:6), fmt='(i2)') nobs-13
             read(line, fmt=dynfmt) (key(i), i=27,nobs)
 
           endif

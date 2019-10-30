@@ -22,7 +22,7 @@ gpsSNR_v3: gpsSNR_v3.e
 	gfortran -c $<
 
 gpsSNR_v3.e: $(OBJFILES_v3)
-	gfortran $(OBJFILES_v3) -o gpsSNR_v3.e
+	gfortran $(OBJFILES_v3) -fbacktrace -fbounds-check -o gpsSNR_v3.e
 
 .PHONY: clean
 clean:
