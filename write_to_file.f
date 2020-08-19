@@ -9,6 +9,8 @@
       integer prn_pick,outID,L2Ctracking,prn
       integer blockIIRM(maxsat)
 c     author: Kristine Larson
+c     2020aug17 check for large (nonsense) SNR values
+c
 c     16jul15 added s5
 c     this supports old option that printed out L1 and L2 phase
       w1 = c/f1 ! L1 wavelength in meters
@@ -16,6 +18,9 @@ c     this supports old option that printed out L1 and L2 phase
 c     no longer writing out reflection point. columns 5 and 6 are zero
       x = 0
       y = 0
+c     make sure that you do not have huge SNR values which overrun the
+c     fortran write statement
+      call checkForNonsense(s1,s2,s5)
 
       if (prn_pick.eq.99.and.(elev.gt.5
      .  .and.elev.lt.30)) then
@@ -44,5 +49,21 @@ c     if you only requested a single satellite
       elseif (prn.eq.prn_pick)  then
         write(outID,'(i3,  2f10.4, f10.0, 2f7.2, 3f7.2)' )
      .    prn, elev, azimuth, tod, x,y, s1, s2, s5
+      endif
+      end
+      subroutine checkForNonsense(s1,s2,s5)
+c     this should take care of nonsense values that overrun
+c     the fortran write statements
+c     2020 august 19
+      real*8 s1,s2,s5,s6,s7,s8
+
+      if ((s1.gt.999).or.(s1.lt.0)) then
+        s1=0
+      endif
+      if ((s2.gt.999).or.(s2.lt.0)) then
+        s2=0
+      endif
+      if ((s5.gt.999).or.(s5.lt.0)) then
+        s5=0
       endif
       end
