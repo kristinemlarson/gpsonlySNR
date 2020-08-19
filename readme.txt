@@ -1,3 +1,10 @@
+August 17, 2020
+Check for really big (> 999 dB-Hz) nonsense SNR values. They are now set to zero because 
+they would otherwise overrun the formatted write statement.
+
+September 10, 2019
+Adding static compile statement
+
 March 1, 2019
 Now allow up to 20 observable types in a RINEX file
 
@@ -26,10 +33,11 @@ Reminder on some output choices (elevation angles):
 77 - all data > 5, L2C satellites only
 88 - all data > 5
 66 - all data < 30
+50 - all data < 10, useful for tall high-rate sites where you only want the lowest elevation data
 
 Look at the shellscript testit to see how to call the code. In short:
 
-RinexSNRv2.e RINEX output navfile option
+gnssSNR.e RINEX output navfile option
 
 If you are unfamiliar with nav files and don't know how to find them,
 I encourage you to contact data@unavco.org
