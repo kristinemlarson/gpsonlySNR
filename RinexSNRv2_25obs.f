@@ -35,6 +35,7 @@ c     version 2.9 19mar01 - allow up to 20 observables, changed code
 c       to read the header and the data block
 c     version 2.10 check dates on input files to make sure they are
 c           in agreement
+c     version 2.11 25 observables and up to 72 measurements per epoch
 c
 c     common block for the GPS broadcast ephemeris
       include 'new_orbit.inc'
@@ -89,7 +90,8 @@ c     Check to see if broadcast file exists
 
 c     read the header of the RINEX file, returning station coordinates
 c     19mar01 - change to 20 observables
-      call read_header_20obs(fileIN,rawfilename, xrec,yrec,zrec, 
+c     22aug16 - change to 25 observables
+      call read_header_25obs(fileIN,rawfilename, xrec,yrec,zrec, 
      .  iobs,nobs,iymd,station)
       call name2ydoy(rawfilename,rinex_year, rinex_doy)
 
@@ -120,9 +122,10 @@ c    KL added 18jan15
         call exit
       endif
 c use the proper limit instead of hardwiring 20
-      if (nobs .gt. maxobs) then
+      if (nobs .gt. maxob) then
         print*, 'This code only works for <=' 
         print*, maxob, ' observations types'
+        print*,'You have ', nobs 
         call exit
       endif
 
@@ -165,7 +168,7 @@ c         print*,'Ignoring this record'
           print*, inline(1:60)
         endif
 c      19mar01 - expanding number of observables allowed
-        call read_block_gps(fileIN, flag,inline,numsat,nobs,satID, 
+        call read_block_gps_25obs(fileIN, flag,inline,numsat,nobs,satID, 
      .    prn,obs,lli)
 c       if flag has value 4, that means there were comment
 c       lines, and those were skipped

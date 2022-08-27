@@ -1,5 +1,5 @@
-      subroutine read_block_gps(fileID, flag,inline,numsat,nobs,satID,
-     .  prn,obs,lli)
+      subroutine read_block_gps_25obs(fileID, flag,inline,
+     +    numsat,nobs,satID, prn,obs,lli)
 c     19mar01 KL
 c     this was originally read_block_gnss.f
 c     I transfered it over from the GNSS code - hopefully to save time
@@ -7,7 +7,7 @@ c     I transfered it over from the GNSS code - hopefully to save time
       include 'local.inc'
       character*1 char, satID(maxsat)
       integer fileID, i, itrack, flag, nobs, numsat, sec
-      integer prn(maxsat), ios, nsat
+      integer prn(maxsat), ios, nsat, maxsatperepoch
       character*80 inline, dynfmt, dynfmt2, dynfmt3,dynfmt4
       character*80 dynfmt5, anotherline
       real*8  obs(maxob,maxsat) 
@@ -22,6 +22,7 @@ c     kl 18oct16, allow up to 48 satellites now
 c     kl 22aug27, allow up to 72 satellites now
 c     22aug26 KL upping to 25 different observables
       debug = .false.
+      maxsatperepoch = 72
       if (flag.le.1 .or. flag.eq.6) then
         read(inline(33:80),'(12(A1,I2))')
      +         (char, prn(i),i=1,12)
@@ -94,9 +95,9 @@ c       19jan09 changed to allow up to 60 satellites
         if (debug) then
 c         print*, 'made it past here'
         endif
-        if (numsat > 72) then
-          print*, 'This code cannot read more than 72 satellites/epoch.'
-          print*, 'Exiting.'
+        if (numsat > maxsatperepoch) then
+          print*, 'This code cannot read more than'
+          print*, maxsatperepoch,' satellites/epoch. Exiting'
           call exit
         endif
 C       KL 19mar01 this should not be needed in a GPS only world
@@ -109,6 +110,8 @@ c           print*, i, nsat
 c         endif
 c       enddo
 c       change to allow up to 20 observable types
+c       22aug27
+c       change to allow up to 25 observable types
         if (flag .le. 1) then
           do itrack = 1, numsat
             if (debug) then
@@ -157,6 +160,30 @@ c     trying to add 15-20 observables
      +           (obs(i,itrack),lli(i,itrack),i=11,15)
               read(fileID, fmt=dynfmt4, iostat=ios)
      +           (obs(i,itrack),lli(i,itrack),i=16,nobs)
+c              trying to add 21-25 observables
+          elseif (nobs.gt.20.and.nobs.le.25) then
+              write(dynfmt, fmt='(A, I3.3, A)')
+     +           "(", 5, "(F14.3, I1,1x))"
+              write(dynfmt2, fmt='(A, I3.3, A)')
+     +           "(", 5, "(F14.3, I1,1x))"
+              write(dynfmt3, fmt='(A, I3.3, A)')
+     +           "(", 5, "(F14.3, I1,1x))"
+              write(dynfmt3, fmt='(A, I3.3, A)')
+     +           "(", 5, "(F14.3, I1,1x))"
+              write(dynfmt4, fmt='(A, I3.3, A)')
+     +           "(" , nobs-20, "(F14.3,I1,1x))"
+
+              read(fileID, fmt=dynfmt, iostat=ios)
+     +           (obs(i,itrack),lli(i,itrack),i=1,5)
+              read(fileID, fmt=dynfmt2, iostat=ios)
+     +           (obs(i,itrack),lli(i,itrack),i=6,10)
+              read(fileID, fmt=dynfmt3, iostat=ios)
+     +           (obs(i,itrack),lli(i,itrack),i=11,15)
+              read(fileID, fmt=dynfmt3, iostat=ios)
+     +           (obs(i,itrack),lli(i,itrack),i=16,20)
+              read(fileID, fmt=dynfmt4, iostat=ios)
+     +           (obs(i,itrack),lli(i,itrack),i=21,nobs)
+
 c           5 or fewer observable types
             else
               write(dynfmt, fmt='(A, I3.3, A)')

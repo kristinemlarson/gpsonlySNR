@@ -56,8 +56,9 @@ c
 c     returns satellite coordinates in METERS
       implicit real*8 (a-h,o-z)
       save
-      integer maxsat
-      parameter (maxsat=50)
+c     integer maxsat
+c     parameter (maxsat=50)
+      include 'local.inc'
       dimension recf(3)
       integer hr, izh
       include 'new_orbit.inc'
@@ -557,4 +558,70 @@ c     rearrange
       call mjdgps(tjul,gpsseconds,gpsweek)
 c     gps seconds, including non integer parts
       tc = dble(gpsseconds) + msec/1000.0
+      end
+
+      subroutine name2ydoy(rawfilename,year,doy)
+      character*80 rawfilename
+      integer ts, k1, k2,year,doy
+      ts = index(rawfilename,' ')
+      k1 = ts-13 + 5
+      k2 = k1 +2
+      read (rawfilename(k1:k2),'(I3)') doy
+      read (rawfilename(k1+5:k1+6),'(I2)') year
+c      in the case that you hae ancient data from the 1990s
+      if (year .lt. 74) then
+        year = year + 2000
+      else
+        year = year + 1900
+      endif
+
+      end
+
+      subroutine check_dates(iymd,rinex_year, rinex_doy, 
+     . inside_year,inside_doy,nav_year,nav_doy)
+      real*8 tjul, tjul_jan1, rho
+      integer iymd(3), jtime(5), nav_year,nav_doy 
+      integer rinex_year, rinex_doy,inside_year,inside_doy 
+      integer std
+c     inputs are three type iymd, which has year, month date
+c     rinex year and doy are from the filename
+c     nav year and doy are from the filename
+c     inside year and doy values are so you can compare
+      std = 6
+      jtime(4) = 0
+      jtime(5) = 0
+      jtime(1) = iymd(2)
+      jtime(2) = iymd(3)
+      jtime(3) = iymd(1)
+
+      call julday(jtime,rho,tjul)
+c     calculating day of year
+      jtime(1) = 1
+      jtime(2) = 1
+      jtime(3) = iymd(1)
+      call julday(jtime,rho,tjul_jan1)
+      inside_doy = int(tjul - tjul_jan1) + 1
+      write(std,*) 'Doy for inside your RINEX file', inside_doy
+      write(std,*) 'Year for inside your RINEX file', rinex_year
+      if (inside_doy .ne. rinex_doy) then
+        write(std,*) 'Mismatch between data and the file name'
+        write(std,*) 'No good will come of this. FIX THE FILENAME'
+        call exit
+      endif
+      if (iymd(1) .ne. rinex_year) then
+        write(std,*) 'Mismatch between the year in data/filename'
+        write(std,*) 'No good will come of this. FIX YOUR FILENAME'
+        call exit
+      endif
+      if (iymd(1) .ne. nav_year) then
+        write(std,*) 'Mismatch between orbit year and your data'
+        write(std,*) iymd(1), nav_year
+        call exit
+      endif
+      if (inside_doy .ne. nav_doy) then
+        write(std,*) 'Mismatch between your data doy and nav doy'
+        write(std,*) inside_doy, nav_doy
+        call exit
+      endif
+
       end
