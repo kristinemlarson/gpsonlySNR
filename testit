@@ -1,10 +1,9 @@
 #!/bin/csh
 #translation tests
 # should exit
-./gpsSNR.e vlis1710.22o  test.snr99 auto1710.22n 99
+./gpsSNR.e vlis1710.22o vlis1710.snr99 auto1710.22n 99
 ./gpsSNR.e p0410010.18o p0410010.snr99 auto0010.18n 99
 ./gpsSNR.e fft21500.21o fft21500.snr99 auto1500.21n 99
-./gpsSNR.e smm30010.18o smm30010.snr99 auto0010.18n 99
 
 exit
 # all data
