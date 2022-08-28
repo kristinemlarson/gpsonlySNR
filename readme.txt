@@ -1,3 +1,10 @@
+August 26, 2022
+
+Allow up to 25 observable types
+
+Allow up to 72 satellites per epoch 
+
+
 August 17, 2020
 Check for really big (> 999 dB-Hz) nonsense SNR values. They are now set to zero because 
 they would otherwise overrun the formatted write statement.
